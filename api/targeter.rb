@@ -5,8 +5,13 @@ module Targeter
 
     desc 'Receives a targeting request and returns the chosen target(s)'
     params do
-      requires 'attack-mode'
-      requires 'radar'
+      requires 'attack-mode', type: AttackModes,
+                              desc: 'Attack mode(s)',
+                              coerce_with: ->(modes) { AttackModes.parse(modes) }
+
+      requires 'radar', type: RadarPositions,
+                        desc: 'Radar position(s)',
+                        coerce_with: ->(positions) { RadarPositions.parse(positions) }
     end
     post :radar do
       status 200
