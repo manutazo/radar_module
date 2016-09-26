@@ -9,7 +9,7 @@ describe AttackMode do
     end
 
     context 'sufficient params' do
-      it 'returns an Attack Mode' do
+      it 'returns an error' do
         expect(AttackMode.new(mode: 'closest-first')).to be_a AttackMode
       end
     end
