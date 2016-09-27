@@ -11,7 +11,7 @@ describe PositionsFilter do
         tx_target     = { type: 'T-X', damage: 90 }
         position_without_humans = { position: coordinates_a, targets: [tx_target] }
         position_with_humans    = { position: coordinates_b, targets: [human_target] }
-        positions = [position_without_humans, position_with_humans]
+        positions = [position_with_humans, position_without_humans]
 
         attack_modes    = AttackModes.new(modes)
         radar_positions = RadarPositions.new(positions)
@@ -24,7 +24,7 @@ describe PositionsFilter do
     end
   end
 
-  describe 'attack-mode includes closst-first' do
+  describe 'attack-mode includes closest-first' do
     it 'gets the closest position' do
       modes          = ['closest-first']
       coord_close    = { x: 1, y: 2 }
@@ -44,7 +44,7 @@ describe PositionsFilter do
     end
   end
 
-  describe 'attack-mode includes further-first' do
+  describe 'attack-mode includes furthest-first' do
     it 'gets the furthest position' do
       modes          = ['furthest-first']
       coord_close    = { x: 1, y: 2 }
@@ -74,6 +74,50 @@ describe PositionsFilter do
       position_tx    = { position: coord_tx, targets: [t1_target, tx_target] }
       position_t1    = { position: coord_tx, targets: [t1_target] }
       positions = [position_tx, position_t1]
+
+      attack_modes    = AttackModes.new(modes)
+      radar_positions = RadarPositions.new(positions)
+
+      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter.formatted_result
+      json   = JSON.parse({ position: coord_tx, targets: ['T-X', 'T1-9']}.to_json)
+      expect(JSON.parse(result.to_json)).to eq json
+    end
+  end
+
+  describe 'multiple attack-modes' do
+    it 'first filters, then gets the result chosen by distance' do
+      modes          = ['furthest-first', 'avoid-crossfire']
+      coord_tx       = { x: 1, y: 2 }
+      coord_t1       = { x: 2, y: 4 }
+      coord_human    = { x: 3, y: 6 }
+      t1_target      = { type: 'T1-9', damage: 120 }
+      tx_target      = { type: 'T-X', damage: 90 }
+      human_target   = { type: 'Human' }
+      position_tx    = { position: coord_tx, targets: [t1_target, tx_target] }
+      position_t1    = { position: coord_t1, targets: [t1_target, tx_target] }
+      position_human = { position: coord_human, targets: [human_target] }
+      positions      = [position_tx, position_human, position_t1]
+
+      attack_modes    = AttackModes.new(modes)
+      radar_positions = RadarPositions.new(positions)
+
+      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter.formatted_result
+      json   = JSON.parse({ position: coord_t1, targets: ['T1-9', 'T-X']}.to_json)
+      expect(JSON.parse(result.to_json)).to eq json
+    end
+
+    it 'first filters, then gets the result chosen by distance' do
+      modes          = ['closest-first', 'priorize-t-x']
+      coord_tx       = { x: 1, y: 2 }
+      coord_t1       = { x: 2, y: 4 }
+      coord_human    = { x: 3, y: 6 }
+      t1_target      = { type: 'T1-9', damage: 120 }
+      tx_target      = { type: 'T-X', damage: 90 }
+      human_target   = { type: 'Human' }
+      position_tx    = { position: coord_tx, targets: [t1_target, tx_target] }
+      position_t1    = { position: coord_t1, targets: [t1_target, tx_target] }
+      position_human = { position: coord_human, targets: [human_target] }
+      positions      = [position_tx, position_human, position_t1]
 
       attack_modes    = AttackModes.new(modes)
       radar_positions = RadarPositions.new(positions)

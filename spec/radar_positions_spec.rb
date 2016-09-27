@@ -28,21 +28,6 @@ describe RadarPositions do
   end
 
   describe 'validity' do
-    context 'no positions defined' do
-      it 'is invalid' do
-        expect(RadarPositions.new([]).positions_specified?).to be false
-      end
-    end
-
-    context 'positions defined' do
-      it 'is valid' do
-        expect(RadarPositions.new([
-          { position: { x: 3, y: 40 }, targets: [{ type: 'Human' }] },
-          { position: { x: 4, y: 41 }, targets: [{ type: 'Human' }] }
-        ]).positions_specified?).to be true
-      end
-    end
-
     context 'valid positions' do
       it 'is valid' do
         expect(RadarPositions.new([

@@ -1,7 +1,6 @@
 class RadarPosition
   attr_reader :coordinates, :targets, :distance
-
-  ORIGIN = {x: 0, y: 0}
+  ORIGIN = { x: 0, y: 0 }
 
   def initialize(attributes = {})
     initialize_coordinates(attributes.fetch(:position))

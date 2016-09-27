@@ -5,22 +5,28 @@ class PositionsFilter
   end
 
   def filter
-    results = {}
+    result = nil
+    attack_modes = @attacks.modes.map(&:mode)
 
-    @attacks.modes.each do |attack_mode|
-      case attack_mode.mode
-      when AttackMode::CLOSEST_FIRST
-        results = closest_position
-      when AttackMode::FURTHEST_FIRST
-        results = furthest_position
-      when AttackMode::AVOID_CROSSFIRE
-        results = remove_positions_with_humans
-      when AttackMode::PRIORIZE_TX
-        results = priorize_tx
-      end
+    # lets be human and keep our guys safe first
+    if attack_modes.include? AttackMode::AVOID_CROSSFIRE
+      remove_positions_with_humans
+      attack_modes.delete(AttackMode::AVOID_CROSSFIRE)
     end
 
-    results.first || {}
+    # now let's fry those TX's
+    if attack_modes.include? AttackMode::PRIORIZE_TX
+      priorize_tx_positions
+      attack_modes.delete(AttackMode::PRIORIZE_TX)
+    end
+
+    if attack_modes.include? AttackMode::FURTHEST_FIRST
+      result = @radar.positions.last
+    else
+      result = @radar.positions.first
+    end
+
+    result || {}
   end
 
   private
@@ -29,20 +35,8 @@ class PositionsFilter
     @radar.positions_without_humans
   end
 
-  def priorize_tx
-    positions = remove_positions_without_tx
-    positions.each{ |p| p.priorize_tx }
-  end
-
-  def remove_positions_without_tx
+  def priorize_tx_positions
     @radar.positions_with_tx
-  end
-
-  def closest_position
-    [@radar.positions.first]
-  end
-
-  def furthest_position
-    [@radar.positions.last]
+    @radar.positions.each{ |p| p.priorize_tx }
   end
 end
