@@ -60,6 +60,7 @@ class RadarPosition
   def initialize_targets(targets)
     @targets = targets.collect{ |target_attributes| Target.new(target_attributes) }
     @targets = @targets.sort{ |a, b| a.damage && b.damage ? b.damage <=> a.damage : b ? -1 : 1 }
+    @targets = @targets.select{ |t| t.valid? }
   end
 
   def targets_to_results
