@@ -16,7 +16,7 @@ class PositionsFilter
       when AttackMode::AVOID_CROSSFIRE
         results = remove_positions_with_humans
       when AttackMode::PRIORIZE_TX
-        results = remove_positions_without_tx
+        results = priorize_tx
       end
     end
 
@@ -27,6 +27,11 @@ class PositionsFilter
 
   def remove_positions_with_humans
     @radar.positions_without_humans
+  end
+
+  def priorize_tx
+    positions = remove_positions_without_tx
+    positions.each{|p| p.priorize_tx}
   end
 
   def remove_positions_without_tx

@@ -19,7 +19,7 @@ describe PositionsFilter do
         result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
 
         expect(result.has_humans?).to eq false
-        expect(JSON.parse(result.to_json)).to eq JSON.parse({ position: coordinates_a, targets: ['T-X'] }.to_json)
+        expect(JSON.parse(result.formatted_result.to_json)).to eq JSON.parse({ position: coordinates_a, targets: ['T-X'] }.to_json)
       end
     end
   end
@@ -38,7 +38,7 @@ describe PositionsFilter do
       attack_modes    = AttackModes.new(modes)
       radar_positions = RadarPositions.new(positions)
 
-      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
+      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter.formatted_result
 
       expect(JSON.parse(result.to_json)).to eq JSON.parse({ position: coord_close, targets: ['T-X'] }.to_json)
     end
@@ -58,9 +58,29 @@ describe PositionsFilter do
       attack_modes    = AttackModes.new(modes)
       radar_positions = RadarPositions.new(positions)
 
-      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
+      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter.formatted_result
 
       expect(JSON.parse(result.to_json)).to eq JSON.parse({ position: coord_far, targets: ['T1-9'] }.to_json)
+    end
+  end
+
+  describe 'attack-mode includes priorize-t-x' do
+    it 'gets the position with t-x' do
+      modes          = ['priorize-t-x']
+      coord_tx    = { x: 1, y: 2 }
+      coord_t1      = { x: 2, y: 4 }
+      t1_target      = { type: 'T1-9', damage: 120 }
+      tx_target      = { type: 'T-X', damage: 90 }
+      position_tx    = { position: coord_tx, targets: [t1_target, tx_target] }
+      position_t1    = { position: coord_tx, targets: [t1_target] }
+      positions = [position_tx, position_t1]
+
+      attack_modes    = AttackModes.new(modes)
+      radar_positions = RadarPositions.new(positions)
+
+      result = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter.formatted_result
+      json   = JSON.parse({ position: coord_tx, targets: ['T-X', 'T1-9']}.to_json)
+      expect(JSON.parse(result.to_json)).to eq json
     end
   end
 end

@@ -13,11 +13,11 @@ class RadarPosition
     valid_targets?
   end
 
-  def to_json
-    JSON.generate({
+  def formatted_result
+    {
       position: { x: @coordinates[:x], y: @coordinates[:y] },
-      targets: @targets.reject{ |t| t.is_human? }.map(&:type).reverse
-    })
+      targets: targets_to_results
+    }
   end
 
   def has_humans?
@@ -26,6 +26,15 @@ class RadarPosition
 
   def has_tx?
     @targets.map(&:is_tx?).any?
+  end
+
+  def priorize_tx
+    tx_present = @targets.select{|t| t.type == Target::TX}
+
+    tx_present.each do |tx|
+      @targets.delete(tx)
+      @targets.insert(0, tx)
+    end
   end
 
   private
@@ -50,5 +59,10 @@ class RadarPosition
 
   def initialize_targets(targets)
     @targets = targets.collect{ |target_attributes| Target.new(target_attributes) }
+    @targets = @targets.sort{ |a, b| a.damage && b.damage ? b.damage <=> a.damage : b ? -1 : 1 }
+  end
+
+  def targets_to_results
+    @targets.reject{ |t| t.is_human? }.map(&:type)
   end
 end

@@ -19,7 +19,9 @@ module Targeter
       attack_modes = declared(params)['attack-mode']
       radar_positions = declared(params).radar
 
-      PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
+      position = PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
+
+      position.formatted_result
     end
   end
 end

@@ -33,4 +33,9 @@ class AttackModes
     modes = @modes.map(&:mode)
     modes.include?(AttackMode::CLOSEST_FIRST) ? !modes.include?(AttackMode::FURTHEST_FIRST) : true
   end
+
+  def priorize_tx?
+    modes = @modes.map(&:mode)
+    modes.include?(AttackMode::PRIORIZE_TX)
+  end
 end
