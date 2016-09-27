@@ -3,6 +3,7 @@ class RadarPositions
 
   def initialize(positions)
     @positions = positions.collect{ |rp| RadarPosition.new(rp) }
+    @positions = @positions.select{ |t| t.valid? }
     @positions = @positions.sort{|p1, p2| p1.distance <=> p2.distance}
   end
 
