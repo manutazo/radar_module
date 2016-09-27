@@ -1,10 +1,12 @@
 ### Targeter module
 
-Ruby version: `2.3.1`
-Install dependencies: `bundle install`
-Run: `rackup -p 8888`
+* Ruby version: `2.3.1`
+* Install dependencies: `bundle install`
+* Run: `rackup -p 8888`
 
 ### Run tests attack
+
+Run the module as specified before, then...
 
 ```
 cd test_attack
