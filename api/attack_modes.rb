@@ -31,6 +31,6 @@ class AttackModes
 
   def compatible_modes?
     modes = @modes.map(&:mode)
-    !modes.include?('furthest-first') if modes.include?('closest-first')
+    modes.include?(AttackMode::CLOSEST_FIRST) ? !modes.include?(AttackMode::FURTHEST_FIRST) : true
   end
 end

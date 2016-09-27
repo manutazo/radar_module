@@ -18,6 +18,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require "rack/test"
 require 'grape'
+require 'json'
 
 Dir["#{File.dirname(__FILE__)}/../api/*.rb"].each { |f| require f }
 

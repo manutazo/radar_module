@@ -1,12 +1,12 @@
 class AttackMode
   attr_reader :mode
 
-  MODES = [
-    'closest-first',
-    'furthest-first',
-    'avoid-crossfire',
-    'priorize-t-x'
-  ].freeze
+  CLOSEST_FIRST   = 'closest-first'.freeze
+  FURTHEST_FIRST  = 'furthest-first'.freeze
+  AVOID_CROSSFIRE = 'avoid-crossfire'.freeze
+  PRIORIZE_TX     = 'priorize-t-x'.freeze
+
+  MODES = [CLOSEST_FIRST, FURTHEST_FIRST, AVOID_CROSSFIRE, PRIORIZE_TX].freeze
 
   def initialize(attributes={})
     @mode = attributes.fetch(:mode)

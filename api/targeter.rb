@@ -15,7 +15,11 @@ module Targeter
     end
     post :radar do
       status 200
-      return {}
+
+      attack_modes = declared(params)['attack-mode']
+      radar_positions = declared(params).radar
+
+      PositionsFilter.new(modes: attack_modes, radar: radar_positions).filter
     end
   end
 end

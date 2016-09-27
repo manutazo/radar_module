@@ -1,12 +1,16 @@
 class Target
   attr_reader :type, :damage
 
+  HUMAN = 'Human'.freeze
+  TX    = 'T-X'.freeze
+
   TYPES = [
-    'Human',
-    'T1',
+    HUMAN,
+    TX,
+    'T1', # not on the doc, but on the tests
     'T1-9',
     'T7-1',
-    'T-X',
+    'T7-T', # not on the doc, but on the tests
     'HK-Tank',
     'HK-Bomber',
     'HK Airstrike'
@@ -14,10 +18,18 @@ class Target
 
   def initialize(attributes={})
     @type   = attributes.fetch(:type)
-    @damage = attributes.fetch(:damage) unless @type == 'Human'
+    @damage = attributes.fetch(:damage) unless @type == HUMAN
   end
 
   def valid?
     TYPES.include?(@type)
+  end
+
+  def is_human?
+    @type == HUMAN
+  end
+
+  def is_tx?
+    @type == TX
   end
 end

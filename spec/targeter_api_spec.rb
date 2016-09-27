@@ -47,7 +47,7 @@ describe Targeter::API do
                }]
 
           expect(last_response.status).to eq(200)
-          expect(last_response.body).to eq '{}'
+          expect(JSON.parse(last_response.body)).to eq JSON.parse("{\"position\":{\"x\":0,\"y\":40},\"targets\":[\"T-X\",\"T1\"]}")
         end
       end
 
