@@ -31,7 +31,7 @@ class PositionsFilter
 
   def priorize_tx
     positions = remove_positions_without_tx
-    positions.each{|p| p.priorize_tx}
+    positions.each{ |p| p.priorize_tx }
   end
 
   def remove_positions_without_tx
@@ -39,10 +39,10 @@ class PositionsFilter
   end
 
   def closest_position
-    [@radar.closest_position]
+    [@radar.positions.first]
   end
 
   def furthest_position
-    [@radar.furthest_position]
+    [@radar.positions.last]
   end
 end
