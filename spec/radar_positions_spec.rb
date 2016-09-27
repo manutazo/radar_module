@@ -58,23 +58,5 @@ describe RadarPositions do
         ]).valid_positions?).to be false
       end
     end
-
-    context 'unique positions' do
-      it 'is valid' do
-        expect(RadarPositions.new([
-          { position: { x: 3, y: 40 }, targets: [{ type: 'Human' }] },
-          { position: { x: 4, y: 41 }, targets: [{ type: 'Human' }] }
-        ]).unique_positions?).to be true
-      end
-    end
-
-    context 'non unique positions' do
-      it 'is invalid' do
-        expect(RadarPositions.new([
-          { position: { x: 3, y: 40 }, targets: [{ type: 'Human' }] },
-          { position: { x: 3, y: 40 }, targets: [{ type: 'Human' }] }
-        ]).unique_positions?).to be false
-      end
-    end
   end
 end

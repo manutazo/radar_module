@@ -9,8 +9,7 @@ class RadarPositions
   def self.parse(positions)
     radar_positions = new(positions)
 
-    fail 'Invalid positions'              unless radar_positions.valid_positions?
-    fail 'Repeated positions not allowed' unless radar_positions.unique_positions?
+    fail 'Invalid positions' unless radar_positions.valid_positions?
 
     radar_positions
   end
@@ -21,11 +20,6 @@ class RadarPositions
 
   def valid_positions?
     @positions.map(&:valid?).uniq == [true]
-  end
-
-  def unique_positions?
-    positions = @positions.map(&:coordinates)
-    positions.length == positions.uniq.length
   end
 
   def positions_without_humans
